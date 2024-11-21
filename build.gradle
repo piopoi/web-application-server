@@ -5,15 +5,43 @@ plugins {
 group = 'com.piopoi'
 version = '1.0-SNAPSHOT'
 
-repositories {
-    mavenCentral()
+subprojects {
+    apply plugin: 'java'
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        // jackson
+        implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.4.2'
+
+        // lombok
+        compileOnly 'org.projectlombok:lombok:1.18.36'
+        annotationProcessor 'org.projectlombok:lombok:1.18.36'
+        testCompileOnly 'org.projectlombok:lombok:1.18.36'
+        testAnnotationProcessor 'org.projectlombok:lombok:1.18.36'
+
+        // test: junit5, assertj
+        testImplementation platform('org.junit:junit-bom:5.10.0')
+        testImplementation 'org.junit.jupiter:junit-jupiter'
+        testImplementation 'org.assertj:assertj-core:3.26.3'
+
+        // logging: slf4j, logback
+        implementation 'org.slf4j:slf4j-api:2.0.9'
+        runtimeOnly 'ch.qos.logback:logback-classic:1.4.12'
+    }
+
+    test {
+        useJUnitPlatform()
+    }
 }
 
-dependencies {
-    testImplementation platform('org.junit:junit-bom:5.10.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-}
+project(":was-sync-blocking") {
+    //JDK 17
+    sourceCompatibility = '17'
+    targetCompatibility = '17'
 
-test {
-    useJUnitPlatform()
+    dependencies {
+    }
 }
