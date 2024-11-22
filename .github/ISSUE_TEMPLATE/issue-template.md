@@ -9,14 +9,14 @@ assignees: piopoi
 
 ## 설명
 
+- resolves #{이슈 번호}
 - 
 
-## 작업 상세
+## 작업 내용
 
-- [ ] todo1
-- [ ] todo2
-- [ ] todo3
+- 
+- 
 
 ## 기타
 
--
+- 
