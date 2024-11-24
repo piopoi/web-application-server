@@ -11,10 +11,10 @@ public class ServerConfig {
     private static final String SERVER_CONFIG_FILENAME = "server.yaml";
     private static final int MIN_PORT = 1;
     private static final int MAX_PORT = 65535;
-    private static final int MIN_THREAD_POOL_SIZE = 1;
+    private static final int MIN_CONNECTION_POOL_SIZE = 1;
 
     private int port;
-    private int threadPoolSize;
+    private int connectionPoolSize;
 
     private ServerConfig() {
     }
@@ -33,14 +33,14 @@ public class ServerConfig {
         }
     }
 
-    public static ServerConfig getInstance() {
+    public static ServerConfig load() {
         return ConfigHolder.INSTANCE;
     }
 
     private void validate() {
         try {
             validatePort();
-            validateThreadPoolSize();
+            validateConnectionPoolSize();
         } catch (InvalidConfigurationException e) {
             log.error(e.getMessage());
         }
@@ -52,10 +52,10 @@ public class ServerConfig {
         }
     }
 
-    private void validateThreadPoolSize() throws InvalidConfigurationException {
-        if (threadPoolSize < MIN_THREAD_POOL_SIZE) {
+    private void validateConnectionPoolSize() throws InvalidConfigurationException {
+        if (connectionPoolSize < MIN_CONNECTION_POOL_SIZE) {
             throw new InvalidConfigurationException(
-                    "Thread pool size " + threadPoolSize + " is too small. Minimum accepted size is " + MIN_THREAD_POOL_SIZE + ".");
+                    "Connection pool size " + connectionPoolSize + " is too small. Minimum accepted size is " + MIN_CONNECTION_POOL_SIZE + ".");
         }
     }
 }
