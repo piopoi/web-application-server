@@ -10,15 +10,15 @@ class ConfigLoaderTest {
     @Test
     void loadServerConfig() throws NoSuchFieldException, IllegalAccessException {
         // when
-        ServerConfig serverConfig = ServerConfig.getInstance();
+        ServerConfig serverConfig = ServerConfig.load();
 
         // then
         int minPort = getInaccessibleFieldValue("MIN_PORT", Integer.class);
         int maxPort = getInaccessibleFieldValue("MAX_PORT", Integer.class);
-        int minThreadPoolSize = getInaccessibleFieldValue("MIN_THREAD_POOL_SIZE", Integer.class);
+        int minThreadPoolSize = getInaccessibleFieldValue("MIN_CONNECTION_POOL_SIZE", Integer.class);
 
         assertThat(serverConfig).isNotNull();
         assertThat(serverConfig.getPort()).isBetween(minPort, maxPort);
-        assertThat(serverConfig.getThreadPoolSize()).isGreaterThanOrEqualTo(minThreadPoolSize);
+        assertThat(serverConfig.getConnectionPoolSize()).isGreaterThanOrEqualTo(minThreadPoolSize);
     }
 }
