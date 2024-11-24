@@ -14,12 +14,13 @@
 
 ## Requirements
 
-- JDK 21
+- JDK 17 & 21
 - Gradle 8.10
 
 ## Specifications
-
-- 외부 네트워크 라이브러리 사용을 금지한다.
+- 동기/비동기, 블로킹/논블로킹에 대한 이해를 위한 프로젝트이므로 `GET` 요청에 대한 기능만 구현한다.
+  - `GET` 메서드 요청을 받고 응답을 반환하는 기능만 구현한다.
+- Java 기본 라이브러리 외 외부 네트워크 라이브러리 사용을 금지한다.
 - 서버의 설정 값은 별도의 설정파일로 관리한다.
   - Production 환경 설정: `was-sync-blocking/src/main/resources/server.yaml`
   - Test 환경 설정: `was-sync-blocking/src/test/resources/server.yaml`

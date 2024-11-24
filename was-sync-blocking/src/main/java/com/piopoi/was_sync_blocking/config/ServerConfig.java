@@ -24,7 +24,7 @@ public class ServerConfig {
 
         static {
             try {
-                ServerConfig serverConfig = ConfigLoader.loadServerConfig(SERVER_CONFIG_FILENAME);
+                ServerConfig serverConfig = ConfigLoader.loadConfig(ServerConfig.class, SERVER_CONFIG_FILENAME);
                 serverConfig.validate();
                 INSTANCE = serverConfig;
             } catch (IOException e) {
