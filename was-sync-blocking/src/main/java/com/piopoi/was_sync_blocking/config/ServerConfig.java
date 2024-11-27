@@ -28,7 +28,7 @@ public class ServerConfig {
                 serverConfig.validate();
                 INSTANCE = serverConfig;
             } catch (IOException e) {
-                throw new ExceptionInInitializerError("Failed to load config: " + e.getMessage());
+                throw new ExceptionInInitializerError("Failed to load ServerConfig: " + e.getMessage());
             }
         }
     }

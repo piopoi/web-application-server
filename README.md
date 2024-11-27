@@ -24,3 +24,17 @@
 - 서버의 설정 값은 별도의 설정파일로 관리한다.
   - Production 환경 설정: `was-sync-blocking/src/main/resources/server.yaml`
   - Test 환경 설정: `was-sync-blocking/src/test/resources/server.yaml`
+- 모든 요청을 미리 설정된 보안 규칙에 따라 검사한다.
+  - 규칙 추가 방법
+    - `SecurityRule` 인터페이스를 구현한 클래스를 작성만 해두면, 
+    - Reflection 라이브러리를 이용하여 런타임에 자동으로 보안 규칙 리스트에 추가한다.
+  - 규칙 위반 시, 상태코드 `400 Bad Request`를 반환한다.
+  - 현재 설정된 규칙
+    - HTTP_ROOT 디렉터리의 상위 디렉터리에 접근은 거부한다.
+    - 설정된 확장자의 파일에 대한 요청만 허용한다.
+    - 설정된 HTTP Method에 대한 요청만 허용한다.
+- DispatcherServlet 동작 방식
+  1. 보안 규칙에 따라 모든 요청을 검사하여 규칙을 위반한 요청은 400 Bad Request를 반환한다.
+  2. 정상적인 요청인 경우, web.yaml Path와 매핑된 서블릿을 실행한다.
+  3. web.yaml에 매핑된 Path가 아니면, Path와 일치하는 경로의 정적 파일을 반환한다.
+  4. 1~3에 해당하지 않으면, 400 Bad Request를 반환한다.

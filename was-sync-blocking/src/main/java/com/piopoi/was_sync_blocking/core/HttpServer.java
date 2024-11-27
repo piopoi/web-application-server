@@ -13,26 +13,40 @@ public class HttpServer {
     private final ServerConfig serverConfig;
     private ExecutorService executorService;
     private ServerSocket serverSocket;
-    private volatile boolean running = false;
+    private volatile boolean running = true;
 
     public HttpServer() {
         this.serverConfig = ServerConfig.load();
     }
 
     public void start() {
-        int port = serverConfig.getPort();
-        int connectionPoolSize = serverConfig.getConnectionPoolSize();
-        executorService = Executors.newFixedThreadPool(connectionPoolSize);
-
         try {
-            serverSocket = new ServerSocket(port);
-            log.info("Server started on port {}", port);
+            int port = serverConfig.getPort();
+            log.info("Server port: {}", port);
 
-            while (true) {
-                Socket socket = serverSocket.accept();
-                executorService.submit(new HttpRequestHandler(socket));
+            int connectionPoolSize = serverConfig.getConnectionPoolSize();
+            executorService = Executors.newFixedThreadPool(connectionPoolSize);
+            log.info("Connection pool size: {}", connectionPoolSize);
+
+            serverSocket = new ServerSocket(port);
+            log.info("Starting server on port {}", port);
+
+            while (running) {
+                try {
+                    Socket socket = serverSocket.accept();
+                    log.info("Accepted connection from {}", socket.getRemoteSocketAddress());
+
+                    executorService.submit(new HttpRequestHandler(socket));
+                } catch (IOException e) {
+                    if (!running) {
+                        log.info("Server socket closed.");
+                    } else {
+                        log.error("Error accepting connection.", e);
+                    }
+                }
             }
         } catch (IOException e) {
+            log.error("Error starting server socket", e);
             throw new RuntimeException(e);
         } finally {
             stop();

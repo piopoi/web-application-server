@@ -7,28 +7,35 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import java.io.PrintWriter;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
-import lombok.Getter;
 import lombok.Setter;
 
 @Setter
-@Getter
 public class HttpResponse {
     private final PrintWriter writer;
-    private HttpStatus httpStatus;
-    private String contentType;
-    private StringBuilder body;
+    private HttpStatus httpStatus = OK;
+    private String contentType = CONTENT_TYPE_TEXT_HTML;
+    private final Map<String, String> headers = new HashMap<>();
+    private final StringBuilder body = new StringBuilder();
 
     public HttpResponse(PrintWriter writer) {
         this.writer = writer;
-        this.httpStatus = OK;
-        this.contentType = CONTENT_TYPE_TEXT_HTML;
-        this.body = new StringBuilder();
+    }
+
+    public void writeHeader(String key, String value) {
+        headers.put(key, value);
     }
 
     public void writeBody(String body) {
         this.body.append(body);
+    }
+
+    public void clearHeadersAndBody() {
+        headers.clear();
+        body.setLength(0);
     }
 
     public void flush() {
@@ -43,10 +50,11 @@ public class HttpResponse {
         writer.println("Date: " + getDateHeader());
         writer.println("Content-Type: " + contentType);
         writer.println("Content-Length: " + getContentLength());
+        headers.forEach((key, value) -> writer.println(key + ": " + value));
     }
 
     private int getContentLength() {
-        return writer.toString().getBytes(UTF_8).length;
+        return body.toString().getBytes(UTF_8).length;
     }
 
     private String getDateHeader() {

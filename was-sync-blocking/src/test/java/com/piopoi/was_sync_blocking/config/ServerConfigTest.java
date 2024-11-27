@@ -1,14 +1,16 @@
 package com.piopoi.was_sync_blocking.config;
 
-import static com.piopoi.was_sync_blocking.util.ReflectionTestUtils.*;
+import static com.piopoi.was_sync_blocking.test.TestUtils.*;
 import static org.assertj.core.api.Assertions.*;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class ConfigLoaderTest {
+class ServerConfigTest {
 
     @Test
-    void loadServerConfig() throws NoSuchFieldException, IllegalAccessException {
+    @DisplayName("서버 설정을 load 할 수 있다.")
+    void load() throws NoSuchFieldException, IllegalAccessException {
         // when
         ServerConfig serverConfig = ServerConfig.load();
 
