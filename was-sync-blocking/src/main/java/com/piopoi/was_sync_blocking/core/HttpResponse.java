@@ -54,7 +54,7 @@ public class HttpResponse {
     }
 
     private int getContentLength() {
-        return writer.toString().getBytes(UTF_8).length;
+        return body.toString().getBytes(UTF_8).length;
     }
 
     private String getDateHeader() {

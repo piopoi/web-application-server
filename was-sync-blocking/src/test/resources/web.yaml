@@ -1,0 +1,5 @@
+servlets:
+  - path: "/Test1"
+    className: com.piopoi.was_sync_blocking.test.Test1Servlet
+  - path: "/Test2"
+    className: com.piopoi.was_sync_blocking.test.Test2Servlet

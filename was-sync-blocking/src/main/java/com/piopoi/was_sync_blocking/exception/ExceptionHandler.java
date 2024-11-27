@@ -19,6 +19,7 @@ public class ExceptionHandler {
     }
 
     private HttpStatus getHttpStatus(Exception e) {
+        log.error(e.getMessage(), e);
         if (e instanceof CustomException) {
             return ((CustomException) e).getHttpStatus();
         } else {

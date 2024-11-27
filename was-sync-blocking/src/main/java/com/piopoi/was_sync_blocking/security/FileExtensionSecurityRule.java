@@ -20,6 +20,9 @@ public class FileExtensionSecurityRule implements SecurityRule {
     @Override
     public void isViolated(HttpRequest request) throws BadRequestException {
         String path = request.getPath();
+        if (!path.contains(".")) {
+            return;
+        }
         extensions.stream()
                 .filter(extension -> path.endsWith("." + extension))
                 .findAny()

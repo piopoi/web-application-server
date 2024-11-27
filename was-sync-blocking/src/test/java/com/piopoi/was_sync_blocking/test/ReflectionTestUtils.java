@@ -1,4 +1,4 @@
-package com.piopoi.was_sync_blocking.util;
+package com.piopoi.was_sync_blocking.test;
 
 import com.piopoi.was_sync_blocking.config.ServerConfig;
 import java.lang.reflect.Field;

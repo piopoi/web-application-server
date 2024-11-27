@@ -24,7 +24,7 @@ public class HttpServerIntegrationTest {
     private static ExecutorService executorService;
     private static int port;
     private static HttpServer httpServer;
-    private static TestHttpClient testHttpClient;
+    private static TestHttpClient httpClient;
 
     @BeforeAll
     public static void setUp() throws Exception {
@@ -37,7 +37,7 @@ public class HttpServerIntegrationTest {
         executorService.submit(() -> httpServer.start());
         Thread.sleep(1000); //서버가 완전히 시작될 대까지 잠시 대기
 
-        testHttpClient = new TestHttpClient(port, HOST);
+        httpClient = new TestHttpClient(port, HOST);
     }
 
     @AfterAll
@@ -54,10 +54,10 @@ public class HttpServerIntegrationTest {
     @Test
     public void invalidMethod() throws IOException {
         // given
-        TestHttpRequest request = buildRequest(POST, PATH, HTTP_VERSION);
+        TestHttpRequest request = buildRequest(PATH);
 
         // when
-        TestHttpResponse response = testHttpClient.sendRequest(request);
+        TestHttpResponse response = httpClient.sendRequest(request);
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(BAD_REQUEST.getCode());
@@ -68,10 +68,10 @@ public class HttpServerIntegrationTest {
     @Test
     public void invalidDirectory() throws IOException {
         // given
-        TestHttpRequest request = buildRequest(GET, "/../../index.html", HTTP_VERSION);
+        TestHttpRequest request = buildRequest("/../../index.html");
 
         // when
-        TestHttpResponse response = testHttpClient.sendRequest(request);
+        TestHttpResponse response = httpClient.sendRequest(request);
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(BAD_REQUEST.getCode());
@@ -80,23 +80,54 @@ public class HttpServerIntegrationTest {
 
     @DisplayName("설정된 확장자가 아닌 파일은 요청할 수 없다.")
     @Test
-    public void invalidExtension() throws IOException {
+    void invalidExtension() throws IOException {
         // given
-        TestHttpRequest request = buildRequest(GET, "/index.exe", HTTP_VERSION);
+        TestHttpRequest request = buildRequest("/index.exe");
 
         // when
-        TestHttpResponse response = testHttpClient.sendRequest(request);
+        TestHttpResponse response = httpClient.sendRequest(request);
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(BAD_REQUEST.getCode());
         assertThat(response.getBody().contains(BAD_REQUEST.getDefaultResponseBody())).isTrue();
     }
 
-    private TestHttpRequest buildRequest(HttpMethod httpMethod, String path, String httpVersion) {
+    @DisplayName("설정에 매핑된 서블릿을 호출할 수 있다.")
+    @Test
+    void callServlet() throws IOException {
+        // given
+        TestHttpRequest request1 = buildRequest("/Test1");
+        TestHttpRequest request2 = buildRequest("/Test2");
+
+        // when
+        TestHttpResponse response1 = httpClient.sendRequest(request1);
+        TestHttpResponse response2 = httpClient.sendRequest(request2);
+
+        // then
+        assertThat(response1.getStatusCode()).isEqualTo(OK.getCode());
+        assertThat(response1.getBody()).contains("Test1Servlet");
+        assertThat(response2.getStatusCode()).isEqualTo(OK.getCode());
+        assertThat(response2.getBody()).contains("Test2Servlet");
+    }
+
+    @DisplayName("설정에 매핑된 서블릿을 호출할 수 있다.")
+    @Test
+    void callServlet_invalid() throws IOException {
+        // given
+        TestHttpRequest request = buildRequest("/Invalid");
+
+        // when
+        TestHttpResponse response = httpClient.sendRequest(request);
+
+        // then
+        assertThat(response.getStatusCode()).isEqualTo(BAD_REQUEST.getCode());
+    }
+
+    private TestHttpRequest buildRequest(String path) {
         return TestHttpRequest.builder()
-                .method(httpMethod.name())
+                .method(METHOD.name())
                 .path(path)
-                .httpVersion(httpVersion)
+                .httpVersion(HTTP_VERSION)
                 .build();
     }
 }
