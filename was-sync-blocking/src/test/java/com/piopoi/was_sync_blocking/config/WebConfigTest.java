@@ -15,8 +15,8 @@ class WebConfigTest {
         webConfig = WebConfig.load();
     }
 
-    @DisplayName("서블릿 매핑 설정을 load 할 수 있다.")
     @Test
+    @DisplayName("서블릿 매핑 설정을 load 할 수 있다.")
     void load() {
         // then
         assertThat(webConfig).isNotNull();
@@ -25,8 +25,8 @@ class WebConfigTest {
         assertThat(webConfig.getServlets().get(0).getClassName()).isEqualTo(TEST1_CLASSNAME);
     }
 
-    @DisplayName("path가 서블릿 매핑된 path면 true를, 아니면 false를 반환한다.")
     @Test
+    @DisplayName("path가 서블릿 매핑된 path면 true를, 아니면 false를 반환한다.")
     void isPathExist() {
         // then
         assertThat(webConfig.isPathExist(TEST1_PATH)).isTrue();
@@ -35,8 +35,8 @@ class WebConfigTest {
         assertThat(webConfig.isPathExist("/Invalid")).isFalse();
     }
 
-    @DisplayName("path에 매핑된 서블릿 클래스명을 반환한다.")
     @Test
+    @DisplayName("path에 매핑된 서블릿 클래스명을 반환한다.")
     void getClassName() {
         // then
         assertThat(webConfig.getClassName(TEST1_PATH)).isEqualTo(TEST1_CLASSNAME);

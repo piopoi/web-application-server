@@ -1,6 +1,6 @@
 package com.piopoi.was_sync_blocking.config;
 
-import static com.piopoi.was_sync_blocking.test.ReflectionTestUtils.*;
+import static com.piopoi.was_sync_blocking.test.TestUtils.*;
 import static org.assertj.core.api.Assertions.*;
 
 import org.junit.jupiter.api.DisplayName;
@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Test;
 
 class ServerConfigTest {
 
-    @DisplayName("서버 설정을 load 할 수 있다.")
     @Test
+    @DisplayName("서버 설정을 load 할 수 있다.")
     void load() throws NoSuchFieldException, IllegalAccessException {
         // when
         ServerConfig serverConfig = ServerConfig.load();

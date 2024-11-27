@@ -1,11 +1,15 @@
 package com.piopoi.was_sync_blocking.core;
 
+import static com.piopoi.was_sync_blocking.util.ResourceUtils.*;
+
 import com.piopoi.was_sync_blocking.config.WebConfig;
 import com.piopoi.was_sync_blocking.exception.BadRequestException;
 import com.piopoi.was_sync_blocking.exception.ExceptionHandler;
 import com.piopoi.was_sync_blocking.security.SecurityFilter;
 import com.piopoi.was_sync_blocking.servlet.HttpServlet;
+import com.piopoi.was_sync_blocking.servlet.StaticResourceServlet;
 import com.piopoi.was_sync_blocking.util.ReflectionUtils;
+import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -28,19 +32,22 @@ public class DispatcherServlet {
      */
     public void dispatch(HttpRequest request, HttpResponse response) {
         try {
-            // 1. 보안 규칙 체크
+            // 보안 규칙 체크
             securityFilter.check(request);
 
-            // 2. 동적 컨텐츠 제공
+            // 동적 컨텐츠 제공
             if (isDynamicRequest(request)) {
                 dispatchDynamic(request, response);
                 return;
             }
 
-            // 3. 정적 컨텐츠 제공
-            dispatchStatic(request, response);
+            // 정적 컨텐츠 제공
+            if (isResourceExists(request.getPath())) {
+                dispatchStatic(request, response);
+                return;
+            }
 
-            dispathNotFound(request);
+            dispatchNotFound(request);
         } catch (Exception e) {
             dispatchException(e, request, response);
         }
@@ -55,11 +62,13 @@ public class DispatcherServlet {
         invokeService(request, response, servletClassName);
     }
 
-    private void dispatchStatic(HttpRequest request, HttpResponse response) {
-
+    private void dispatchStatic(HttpRequest request, HttpResponse response) throws IOException {
+        String body = readResource(request.getPath());
+        StaticResourceServlet staticResourceServlet = new StaticResourceServlet(body);
+        staticResourceServlet.service(request, response);
     }
 
-    private static void dispathNotFound(HttpRequest request) {
+    private static void dispatchNotFound(HttpRequest request) {
         throw new BadRequestException("Invalid request path: path=" + request.getPath());
     }
 

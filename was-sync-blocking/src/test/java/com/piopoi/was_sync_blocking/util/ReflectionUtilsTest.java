@@ -8,8 +8,8 @@ import java.util.List;
 
 class ReflectionUtilsTest {
 
-    @DisplayName("지정된 인터페이스의 모든 구현체 인스턴스를 반환한다")
     @Test
+    @DisplayName("지정된 인터페이스의 모든 구현체 인스턴스를 반환한다")
     void getImplementations() {
         // given
         Class<ReflectionTestInterface> interfaceType = ReflectionTestInterface.class;
@@ -22,8 +22,8 @@ class ReflectionUtilsTest {
         implementations.forEach(impl -> assertThat(impl).isInstanceOf(ReflectionTestInterface.class));
     }
 
-    @DisplayName("주어진 클래스 이름과 타입의 인스턴스를 생성한다")
     @Test
+    @DisplayName("주어진 클래스 이름과 타입의 인스턴스를 생성한다")
     void createInstance_withClassName() {
         // given
         String className = "com.piopoi.was_sync_blocking.util.ReflectionTestClass";
@@ -37,8 +37,8 @@ class ReflectionUtilsTest {
         assertThat(instance).isInstanceOf(ReflectionTestClass.class);
     }
 
-    @DisplayName("주어진 클래스의 인스턴스를 생성한다")
     @Test
+    @DisplayName("주어진 클래스의 인스턴스를 생성한다")
     void createInstance_withClass() {
         // given
         Class<ReflectionTestClass> clazz = ReflectionTestClass.class;
