@@ -1,3 +1,4 @@
 rootProject.name = 'web-application-server'
 include 'was-sync-blocking'
+include 'was-sync-nonblocking'
 

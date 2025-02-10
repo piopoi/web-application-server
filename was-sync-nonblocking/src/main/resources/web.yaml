@@ -1,0 +1,5 @@
+servlets:
+  - path: "/Hello"
+    className: com.piopoi.was_sync_nonblocking.servlet.HelloServlet
+  - path: "/Hi"
+    className: com.piopoi.was_sync_nonblocking.servlet.HiServlet
